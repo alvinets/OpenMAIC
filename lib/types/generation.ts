@@ -1,8 +1,8 @@
 /**
  * Generation Types - Two-Stage Content Generation System
  *
- * Stage 1: User requirements + documents â†’ Scene Outlines (per-page)
- * Stage 2: Scene Outlines â†’ Full Scenes (slide/quiz/interactive/pbl with actions)
+ * Stage 1: User requirements + documents â†?Scene Outlines (per-page)
+ * Stage 2: Scene Outlines â†?Full Scenes (slide/quiz/interactive/pbl with actions)
  */
 
 import type { ActionType } from './action';
@@ -24,7 +24,7 @@ export interface PdfImage {
 }
 
 /**
- * Image mapping for post-processing: image_id â†’ base64 URL
+ * Image mapping for post-processing: image_id â†?base64 URL
  */
 export type ImageMapping = Record<string, string>;
 
