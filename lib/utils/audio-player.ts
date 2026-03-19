@@ -297,21 +297,6 @@ export class AudioPlayer {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = speed;
 
-      // Detect text language first (before voice loading)
-      // Mandarin Chinese: Common simplified/traditional characters
-      const hasMandarin = /[\u4e00-\u9fff\u3400-\u4dbf]/.test(text);
-      // Traditional Chinese characters (more comprehensive detection)
-      const hasTraditionalChinese =
-        /[\u4e00-\u9fff\u3400-\u4dbf]/.test(text) &&
-        (/[們讓著開發區塊點擊收藏視頻音樂電影時尚遊戲科技運動汽車書籍新聞天氣應用程式]/u.test(
-          text,
-        ) ||
-          /[會已經因為所以這個那個什麼哪裡誰怎樣為什麼能夠可以]/u.test(text));
-      // Cantonese-specific characters (common Cantonese words)
-      const hasCantonese = /[咁唔佢咁啲叻冇係咪梗噉咩叻]/u.test(text);
-      const hasJapanese = /[\u3040-\u309f\u30a0-\u30ff]/.test(text);
-      const hasKorean = /[\uac00-\ud7af]/.test(text);
-
       // Get voices - handle async loading
       const getVoices = (): SpeechSynthesisVoice[] => {
         const voices = window.speechSynthesis.getVoices();
@@ -336,78 +321,76 @@ export class AudioPlayer {
 
       voices = getVoices();
       let selectedVoice: SpeechSynthesisVoice | null = null;
+      let userLangCode: string | null = null;
+
+      // Track whether user set a specific voice/language (not 'default')
+      const userHasPreference = voice && voice !== 'default';
 
       if (voices.length > 0) {
-        // First, try to match by exact voice name/id
+        // 1. Try to match by exact voice name/id
         selectedVoice = voices.find((v) => v.name === voice || v.voiceURI === voice) || null;
 
-        // If not found, try matching by language code (e.g., "zh-HK" matches v.lang === "zh-HK")
-        if (!selectedVoice && voice !== 'default') {
+        // 2. Try to match by language code (e.g. 'zh-HK', 'zh-CN', 'en-US')
+        if (!selectedVoice && userHasPreference) {
           selectedVoice =
             voices.find((v) => v.lang === voice) ||
             voices.find((v) => v.lang.startsWith(voice)) ||
             voices.find((v) => voice.startsWith(v.lang)) ||
+            voices.find((v) => v.lang.startsWith(voice.split('-')[0])) ||
             null;
         }
+      }
 
-        // If still not found, use detected language from text content
-        if (!selectedVoice) {
-          if (hasCantonese) {
-            // Try Cantonese voices (yue, zh-HK)
-            selectedVoice =
-              voices.find((v) => v.lang.startsWith('yue')) ||
-              voices.find((v) => v.lang.includes('HK')) ||
-              voices.find((v) => v.lang.includes('Cantonese')) ||
-              voices.find((v) => v.lang === 'zh-HK') ||
-              voices.find((v) => v.lang === 'zh-TW') ||
-              null;
-          } else if (hasTraditionalChinese) {
-            // Try Traditional Chinese voices (zh-TW, zh-HK)
-            selectedVoice =
-              voices.find((v) => v.lang.startsWith('zh-TW')) ||
-              voices.find((v) => v.lang.includes('TW')) ||
-              voices.find((v) => v.lang.includes('Hant')) ||
-              voices.find((v) => v.lang === 'zh-HK') ||
-              null;
-          } else if (hasMandarin) {
-            // Try Mandarin voices (zh-CN, cmn)
-            selectedVoice =
-              voices.find((v) => v.lang.startsWith('zh-CN') || v.lang.startsWith('cmn')) ||
-              voices.find((v) => v.lang.includes('CN') && !v.lang.includes('HK')) ||
-              voices.find((v) => v.lang.includes('Hans')) ||
-              null;
-          } else if (hasJapanese) {
-            selectedVoice = voices.find((v) => v.lang.startsWith('ja')) || null;
-          } else if (hasKorean) {
-            selectedVoice = voices.find((v) => v.lang.startsWith('ko')) || null;
-          }
+      // 3. If user set a language preference but no matching voice found,
+      // set utterance.lang directly so browser uses its best voice for that language
+      if (!selectedVoice && userHasPreference) {
+        userLangCode = voice;
+        utterance.lang = voice;
+      }
 
-          // If still not found, try user-selected voice as fallback
-          if (!selectedVoice && voice !== 'default') {
-            selectedVoice =
-              voices.find((v) => v.name === voice) ||
-              voices.find((v) => v.lang.startsWith(voice.split('-')[0])) ||
-              null;
-          }
+      // 4. Only use text auto-detection when user has NO explicit preference
+      if (!selectedVoice && !userLangCode) {
+        // Detect text language
+        const hasMandarin = /[一-鿿㐀-䶿]/.test(text);
+        const hasTraditionalChinese =
+          /[一-鿿㐀-䶿]/.test(text) &&
+          (/[們讓著開發區塊點擊收藏視頻音樂電影時尚遊戲科技運動汽車書籍新聞天氣應用程式]/u.test(text) ||
+            /[會已經因為所以這個那個什麼哪裡誰怎樣為什麼能夠可以]/u.test(text));
+        const hasCantonese = /[咁唔佢咁啲叻冇係咪梗噉咩]/u.test(text);
+        const hasJapanese = /[぀-ゟ゠-ヿ]/.test(text);
+        const hasKorean = /[가-힯]/.test(text);
+
+        if (hasCantonese) {
+          selectedVoice =
+            voices.find((v) => v.lang.startsWith('yue')) ||
+            voices.find((v) => v.lang.includes('HK')) ||
+            voices.find((v) => v.lang.includes('Cantonese')) ||
+            voices.find((v) => v.lang === 'zh-HK') ||
+            voices.find((v) => v.lang === 'zh-TW') ||
+            null;
+        } else if (hasTraditionalChinese) {
+          selectedVoice =
+            voices.find((v) => v.lang.startsWith('zh-TW')) ||
+            voices.find((v) => v.lang.includes('TW')) ||
+            voices.find((v) => v.lang.includes('Hant')) ||
+            voices.find((v) => v.lang === 'zh-HK') ||
+            null;
+        } else if (hasMandarin) {
+          selectedVoice =
+            voices.find((v) => v.lang.startsWith('zh-CN') || v.lang.startsWith('cmn')) ||
+            voices.find((v) => v.lang.includes('CN') && !v.lang.includes('HK')) ||
+            voices.find((v) => v.lang.includes('Hans')) ||
+            null;
+        } else if (hasJapanese) {
+          selectedVoice = voices.find((v) => v.lang.startsWith('ja')) || null;
+        } else if (hasKorean) {
+          selectedVoice = voices.find((v) => v.lang.startsWith('ko')) || null;
         }
       }
 
       if (selectedVoice) {
         utterance.voice = selectedVoice;
         utterance.lang = selectedVoice.lang;
-      } else {
-        // Fallback: set lang based on detected text
-        if (hasCantonese) {
-          utterance.lang = 'zh-HK';
-        } else if (hasTraditionalChinese) {
-          utterance.lang = 'zh-TW';
-        } else if (hasMandarin) {
-          utterance.lang = 'zh-CN';
-        } else if (hasJapanese) {
-          utterance.lang = 'ja-JP';
-        } else if (hasKorean) {
-          utterance.lang = 'ko-KR';
-        }
       }
 
       // Set up callbacks for speech end/error
@@ -424,7 +407,10 @@ export class AudioPlayer {
       };
 
       utterance.onerror = (event) => {
-        log.error('Browser TTS error:', event.error);
+        // 'canceled' is expected when stop/pause is called — not a real error
+        if (event.error !== 'canceled') {
+          log.error('Browser TTS error:', event.error);
+        }
         this.browserTTSResolve?.(false);
       };
 
