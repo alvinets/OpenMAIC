@@ -250,18 +250,19 @@ export class AudioPlayer {
    * @returns true if any audio started playing, false if no audio
    */
   public async playWithFallback(audioId: string, text: string): Promise<boolean> {
-    // Try pre-generated audio first
-    if (audioId) {
-      const audioStarted = await this.play(audioId);
-      if (audioStarted) {
+    // If browser-native-tts is configured, always use it with the current voice setting
+    // (user may have changed voice via locale switch, so pre-generated audio is stale)
+    if (this.browserTTSConfig && text) {
+      const browserTTSStarted = await this.playBrowserTTS(text);
+      if (browserTTSStarted) {
         return true;
       }
     }
 
-    // Fall back to browser-native-tts
-    if (this.browserTTSConfig && text) {
-      const browserTTSStarted = await this.playBrowserTTS(text);
-      if (browserTTSStarted) {
+    // For other TTS providers: try pre-generated audio first (server-generated, voice is fixed)
+    if (audioId) {
+      const audioStarted = await this.play(audioId);
+      if (audioStarted) {
         return true;
       }
     }
@@ -354,7 +355,9 @@ export class AudioPlayer {
         const hasMandarin = /[一-鿿㐀-䶿]/.test(text);
         const hasTraditionalChinese =
           /[一-鿿㐀-䶿]/.test(text) &&
-          (/[們讓著開發區塊點擊收藏視頻音樂電影時尚遊戲科技運動汽車書籍新聞天氣應用程式]/u.test(text) ||
+          (/[們讓著開發區塊點擊收藏視頻音樂電影時尚遊戲科技運動汽車書籍新聞天氣應用程式]/u.test(
+            text,
+          ) ||
             /[會已經因為所以這個那個什麼哪裡誰怎樣為什麼能夠可以]/u.test(text));
         const hasCantonese = /[咁唔佢咁啲叻冇係咪梗噉咩]/u.test(text);
         const hasJapanese = /[぀-ゟ゠-ヿ]/.test(text);
