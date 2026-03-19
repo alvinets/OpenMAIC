@@ -46,7 +46,6 @@ import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useDraftCache } from '@/lib/hooks/use-draft-cache';
 import { SpeechButton } from '@/components/audio/speech-button';
-import { getVoiceForLanguage } from '@/lib/audio/constants';
 
 const log = createLogger('Home');
 
@@ -563,13 +562,7 @@ function HomePage() {
               <div className="flex-1 min-w-0">
                 <GenerationToolbar
                   language={form.language}
-                  onLanguageChange={(lang) => {
-                    // Auto-switch TTS voice based on course language
-                    const ttsProviderId = useSettingsStore.getState().ttsProviderId;
-                    const newVoice = getVoiceForLanguage(lang, ttsProviderId);
-                    useSettingsStore.getState().setTTSVoice(newVoice);
-                    updateForm('language', lang);
-                  }}
+                  onLanguageChange={(lang) => updateForm('language', lang)}
                   webSearch={form.webSearch}
                   onWebSearchChange={(v) => updateForm('webSearch', v)}
                   onSettingsOpen={(section) => {
