@@ -67,6 +67,7 @@ interface FormState {
   requirement: string;
   webSearch: boolean;
   interactiveMode: boolean;
+  language: 'zh-CN' | 'zh-TW' | 'en-US';
 }
 
 const initialFormState: FormState = {
@@ -74,6 +75,7 @@ const initialFormState: FormState = {
   requirement: '',
   webSearch: false,
   interactiveMode: false,
+  language: 'zh-CN',
 };
 
 function HomePage() {
@@ -539,6 +541,8 @@ function HomePage() {
             <div className="px-3 pb-3 flex items-end gap-2">
               <div className="flex-1 min-w-0">
                 <GenerationToolbar
+                  language={form.language}
+                  onLanguageChange={(lang) => updateForm('language', lang)}
                   webSearch={form.webSearch}
                   onWebSearchChange={(v) => updateForm('webSearch', v)}
                   onSettingsOpen={(section) => {
