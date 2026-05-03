@@ -10,7 +10,6 @@
     "greetingWithName": "嗨，{{name}}"
   },
   "toolbar": {
-    "languageHint": "課程將以此語言生成",
     "pdfParser": "解析器",
     "pdfUpload": "上傳 PDF",
     "removePdf": "移除檔案",
@@ -27,7 +26,16 @@
     "ttsTitle": "語音合成",
     "ttsHint": "選擇 AI 教師的朗讀聲線",
     "ttsPreview": "試聽",
-    "ttsPreviewing": "播放中..."
+    "ttsPreviewing": "播放中...",
+    "auto": "自動",
+    "default": "預設",
+    "dynamic": "動態",
+    "interactiveModeHint": "啟用互動優先模式以獲得更多實作內容",
+    "interactiveModeLabel": "互動模式",
+    "off": "關",
+    "on": "開",
+    "thinking": "思考",
+    "thinkingBudget": "思考預算"
   },
   "export": {
     "pptx": "匯出 PPTX",
@@ -35,7 +43,9 @@
     "resourcePackDesc": "PPTX + 互動式頁面",
     "exporting": "正在匯出...",
     "exportSuccess": "匯出成功",
-    "exportFailed": "匯出失敗"
+    "exportFailed": "匯出失敗",
+    "classroomZip": "匯出課程 ZIP",
+    "classroomZipDesc": "課程結構 + 媒體檔案"
   },
   "chat": {
     "lecture": "授課",
@@ -95,7 +105,9 @@
     "configTooltip": "點擊設定課堂角色",
     "voiceLabel": "聲線",
     "voiceLoading": "載入中...",
-    "voiceAutoAssign": "聲線將自動分配"
+    "voiceAutoAssign": "聲線將自動分配",
+    "noMatchingVoices": "沒有符合的聲音",
+    "searchVoice": "搜尋聲音"
   },
   "proactiveCard": {
     "discussion": "討論",
@@ -117,7 +129,8 @@
     "confirmSwitchMessage": "目前主題正在進行中，切換頁面將結束目前主題。確定要切換嗎？",
     "generatingNextPage": "場景正在生成，請稍候...",
     "fullscreen": "全螢幕",
-    "exitFullscreen": "離開全螢幕"
+    "exitFullscreen": "離開全螢幕",
+    "courseComplete": "課程完成"
   },
   "whiteboard": {
     "title": "互動白板",
@@ -212,7 +225,6 @@
       "mentionHint": "使用 @question 提問，@judge 提交評審",
       "placeholder": "輸入訊息...",
       "send": "傳送",
-      "welcomeMessage": "你好！我是本任務的提問助手，目前任務：「{{title}}」\n\n為了幫助你開展工作，我準備了一些引導問題：\n\n{{questions}}\n\n隨時可以 @question 向我提問！",
       "issueCompleteMessage": "任務「{{completed}}」已完成！進入下一個任務：「{{next}}」",
       "allCompleteMessage": "🎉 所有任務都已完成！專案做得很棒！"
     },
@@ -264,7 +276,11 @@
     "delete": "刪除",
     "rename": "重新命名",
     "renamePlaceholder": "輸入課堂名稱",
-    "renameFailed": "重新命名失敗"
+    "renameFailed": "重新命名失敗",
+    "clearSearch": "清除",
+    "searchAriaLabel": "搜尋課程",
+    "searchEmpty": "沒有符合的課程",
+    "searchPlaceholder": "搜尋課程..."
   },
   "upload": {
     "pdfSizeLimit": "支援最大50MB的PDF檔案",
@@ -405,7 +421,11 @@
       "glm": "GLM",
       "siliconflow": "矽基流動",
       "doubao": "豆包",
-      "ollama": "Ollama（本機模型）"
+      "ollama": "Ollama（本機模型）",
+      "grok": "Grok",
+      "openrouter": "OpenRouter",
+      "tencent-hunyuan": "騰訊混元",
+      "xiaomi": "小米 MiMo"
     },
     "providerTypes": {
       "openai": "OpenAI 協定",
@@ -463,8 +483,7 @@
     "voiceIdPlaceholder": "聲線 ID（如 alloy）",
     "voiceNamePlaceholder": "顯示名稱",
     "addVoice": "新增",
-    "modelNamePlaceholder": "顯示名稱",
-    "addModel": "新增",
+    "modelNamePlaceholder": "選填",
     "defaultModelHint": "API 請求中的模型名（如 kokoro、tts-1）",
     "noVoicesAdded": "暫無聲線，請在下方新增以支援 Agent 選擇不同聲線。",
     "noModelsAdded": "暫無模型，請在下方新增以支援模型選擇。",
@@ -490,7 +509,6 @@
     "modelId": "模型ID",
     "modelIdPlaceholder": "例如：gpt-4o",
     "modelName": "顯示名稱",
-    "modelNamePlaceholder": "選填",
     "modelCapabilities": "能力",
     "advancedSettings": "進階設定",
     "contextWindowLabel": "上下文視窗",
@@ -863,7 +881,57 @@
     "webSearchApiKeyHint": "從 tavily.com 取得 API Key，用於網路搜尋",
     "webSearchBaseUrl": "Base URL",
     "webSearchServerConfigured": "已設定服務端 Tavily API Key",
-    "optional": "選填"
+    "optional": "選填",
+    "baseUrlRegion": {
+      "china": "中國",
+      "international": "國際"
+    },
+    "mineruCloudApiKeyPlaceholder": "輸入 MinerU Cloud API 金鑰",
+    "providerMinerUCloud": "MinerU (雲端)",
+    "providerOpenAIImage": "OpenAI 圖片",
+    "providerVoxCPMTTS": "VoxCPM2",
+    "voxcpmAddClone": "新增複製",
+    "voxcpmAddVoice": "新增聲音",
+    "voxcpmAutoVoice": "自動聲音",
+    "voxcpmAutoVoiceDescription": "使用客服人員人格作為聲音提示",
+    "voxcpmAutoVoiceNoPreview": "自動聲音由客服人員上下文產生，無法直接預覽",
+    "voxcpmAutoVoicePrivacyNote": "自動聲音會將客服人員人格傳送至您設定的 VoxCPM 後端作為聲音提示。",
+    "voxcpmBackend": "後端",
+    "voxcpmBaseUrlPending": "輸入 Base URL 以產生請求 URL",
+    "voxcpmBaseUrlRequired": "請先輸入 VoxCPM Base URL",
+    "voxcpmClone": "複製",
+    "voxcpmCloneCount": "複製 {{count}}",
+    "voxcpmCloneSaveFailed": "儲存複製聲音失敗",
+    "voxcpmCloneSaveOnly": "僅為此後端儲存",
+    "voxcpmCloneSaved": "VoxCPM 複製聲音已儲存",
+    "voxcpmCloneUnsupported": "目前後端不支援複製",
+    "voxcpmCloneUnsupportedDetail": "目前後端不支援複製功能",
+    "voxcpmCloneVoiceNamePlaceholder": "複製的聲音名稱",
+    "voxcpmDeleteVoice": "刪除聲音",
+    "voxcpmNoCustomVoices": "尚無自訂聲音",
+    "voxcpmPreviewFailed": "預覽失敗",
+    "voxcpmPreviewVoice": "預覽聲音",
+    "voxcpmPromptCount": "提示 {{count}}",
+    "voxcpmPromptPlaceholder": "例如：清晰、自然的老師聲音，節奏適中",
+    "voxcpmRecord": "錄音",
+    "voxcpmRecordedVoiceName": "錄製的聲音",
+    "voxcpmRecordingFailed": "錄音轉換失敗",
+    "voxcpmRecordingStartFailed": "無法開始錄音",
+    "voxcpmRecordingUnsupported": "此瀏覽器不支援錄音",
+    "voxcpmReferenceAudioInvalid": "參考音訊無效",
+    "voxcpmReferenceAudioLimitHint": "參考音訊必須小於 10 MB / 60 秒，儲存前會轉換為 WAV 格式。",
+    "voxcpmReferenceTextPlaceholder": "參考音訊逐字稿，選填",
+    "voxcpmStopPreview": "停止預覽",
+    "voxcpmUnavailable": "無法使用",
+    "voxcpmUploadReferenceAudio": "上傳參考音訊",
+    "voxcpmVoiceCount": "{{count}} 個聲音",
+    "voxcpmVoiceDescriptionPlaceholder": "聲音描述，選填",
+    "voxcpmVoiceNamePlaceholder": "聲音名稱",
+    "voxcpmVoicePool": "聲音池",
+    "voxcpmVoiceSaveFailed": "儲存聲音失敗",
+    "voxcpmVoiceSaved": "VoxCPM 聲音已儲存",
+    "voxcpmVoicesDescription": "儲存在此瀏覽器中並加入共享的客服人員聲音池。",
+    "voxcpmVoicesTitle": "VoxCPM 聲音"
   },
   "profile": {
     "title": "個人資料",
@@ -895,5 +963,34 @@
     "title": "請輸入課堂碼",
     "placeholder": "課堂碼",
     "error": "課堂碼錯誤，請重試。"
+  },
+  "classroomComplete": {
+    "encouragement": {
+      "high": "太棒了，你答對了！",
+      "low": "不錯的開始，回顧一下再試一次。",
+      "mid": "做得好，繼續保持！"
+    },
+    "quizScoreLabel": "{{correct}} / {{total}} 正確",
+    "title": "課程完成",
+    "trailLabels": {
+      "interactive": "互動",
+      "pbl": "專題",
+      "quiz": "測驗",
+      "slide": "頁面"
+    }
+  },
+  "import": {
+    "classroom": "匯入課程",
+    "error": {
+      "invalidManifest": "無效的清單檔案",
+      "invalidZip": "無效的 ZIP 檔案",
+      "missingData": "缺少資料",
+      "storageFull": "儲存空間已滿"
+    },
+    "parsing": "解析中...",
+    "success": "匯入成功",
+    "validating": "驗證中...",
+    "writingCourse": "寫入課程資料...",
+    "writingMedia": "寫入媒體檔案..."
   }
 }
